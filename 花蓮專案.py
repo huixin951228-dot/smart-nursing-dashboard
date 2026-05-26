@@ -20,7 +20,7 @@ st.header("模組一:住院病患動態排程與護送調度看板")
 schedule_list=[]
 for bed,info in st.session_state.patients.items():
     for task in info["schedule"]:
-        schedule_list.append({"病床號":bed,"姓名":info["name"],"檢查項目":task["item"],"執行科別":task["dapt"],"急迫度":task["priority"],"目前狀態":task["status"]})
+        schedule_list.append({"病床號":bed,"姓名":info["name"],"檢查項目":task["item"],"執行科別":task["dept"],"急迫度":task["priority"],"目前狀態":task["status"]})
 
 df_schedule=pd.DataFrame(schedule_list)
 df_schedule['sort_key']=df_schedule['急迫度'].map({'緊急':1,'一般':2,'常規':3})
