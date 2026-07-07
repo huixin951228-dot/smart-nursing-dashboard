@@ -1,0 +1,53 @@
+import streamlit as st
+import google.generativeai as genai
+
+GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+genai.cofigure(api_key=GEMINI_API_KEY)
+
+set_page_config(page_title="智慧交班系統紀錄統整系統",layout="contered")
+
+def generate_summary(raw_text,department):
+    """呼叫 Gemini API 進行交班紀錄"""
+    prompt=f"""
+
+原始交班紀錄:
+{raw_text}
+統整後的交班報告:
+"""
+
+   try:
+    model=genai.GenerativeMode("gemini-1.5-flash")
+    response=model.generate_content(prompt)
+    return reponse.text
+except Expection as e:
+    return f"呼叫 AI 發生錯誤:{str(e)}"
+
+st.title("智慧交班紀錄統整系統")
+st.write("輸入每天零散、隨手記錄的交班文字及狀況，讓AI自動幫你排版並分類")
+
+st.divider()
+
+dept_option=st.selectbox("選擇交班部門/場域:",["醫療護理","行政管理","科技與資訊","一般服務業"])
+
+user_input=st.text_area("請輸入或貼上原始交班內容:",height=200,placeholder="例如:3樓點滴幫浦壞了已報修、王曉明發燒38.2度已給藥大夜注意、明早10點要印盤點表")
+
+if st.button ("開始自動調整",type="primary"):
+    if not user_input.strip():
+        st.warning("請先輸入交班內容再點選統整")
+    elif GEMINI_API_KEY=="YOUR_GEMINI_ATP_KEY":
+        st.error("請先在程式碼中填寫您申請的 GEMINI_APT_KEY")
+    else:
+        with st.spinner("AI正在分析並重組資料中，請稍後"):
+            result=generate_summary(user_input,dept_opinion)
+
+            st.success("統整完成")
+
+            st.subheader("統整後的交班報告")
+            st.markdown(result)
+
+            st.text_area("複製純文字區:",value=result,height=200)
+
+st.divider()
+st.caption("提示:本工具不會保留您的個資。若涉及病患隱私，請再輸入前模糊化，例如:王O明。")
+bash
+streamlit run app.py
